@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_puyopuyo/screen/custom_painters/main_puyo_painter.dart';
 import 'package:flutter_puyopuyo/screen/game_model.dart';
 import 'package:provider/provider.dart';
 
@@ -14,6 +15,15 @@ class GamePage extends StatelessWidget {
         builder: (context, model, child) => Scaffold(
           appBar: AppBar(
             title: const Text('flutterでぷよぷよ'),
+          ),
+          body: Center(
+            child: CustomPaint(
+              painter: MainPuyoPainter(),
+              child: const SizedBox(
+                width: 300,
+                height: 600,
+              ),
+            ),
           ),
         ),
       ),
