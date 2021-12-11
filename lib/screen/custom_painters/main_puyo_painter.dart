@@ -20,6 +20,8 @@ class MainPuyoPainter extends CustomPainter {
 
     canvas.drawPath(path, paint);
 
+    // バツを描画する
+
     // ぷよを描画する
 
     // ぷよのつながりを描画する

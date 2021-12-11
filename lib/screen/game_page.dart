@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_puyopuyo/screen/custom_painters/main_puyo_painter.dart';
-import 'package:flutter_puyopuyo/screen/game_model.dart';
 import 'package:provider/provider.dart';
+
+import 'game_model.dart';
+import 'custom_painters/main_puyo_painter.dart';
+import 'custom_painters/next_puyo_painter.dart';
 
 class GamePage extends StatelessWidget {
   static const routeName = 'GamePageRoute';
@@ -17,12 +19,40 @@ class GamePage extends StatelessWidget {
             title: const Text('flutterでぷよぷよ'),
           ),
           body: Center(
-            child: CustomPaint(
-              painter: MainPuyoPainter(),
-              child: const SizedBox(
-                width: 300,
-                height: 600,
-              ),
+            child: Stack(
+              alignment: AlignmentDirectional.center,
+              children: [
+                // メインのフィールド
+                CustomPaint(
+                  painter: MainPuyoPainter(),
+                  child: const SizedBox(
+                    width: 300,
+                    height: 550,
+                  ),
+                ),
+
+                // ネクストのフィールド
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CustomPaint(
+                      painter: NextPuyoPainter(),
+                      child: const SizedBox(
+                        width: 300,
+                        height: 100,
+                      ),
+                    ),
+                  ),
+                ),
+
+                // スタートボタン
+                if (!model.isPlaying)
+                  ElevatedButton(
+                    onPressed: model.startGame,
+                    child: const Text('スタート'),
+                  ),
+              ],
             ),
           ),
         ),
