@@ -23,9 +23,35 @@ class PairPuyoModel {
     return moveTo(dy: dy);
   }
 
+  PairPuyoModel rotate(bool isCW) {
+    final axisPuyoDx = axisPuyo.offset.dx;
+    final axisPuyoDy = axisPuyo.offset.dy;
+    final nextAngleCW = AngleCW.values[(angleCW.index + (isCW ? 1 : -1)) % 4];
+    PuyoModel newSubPuyo;
+    switch (nextAngleCW) {
+      case AngleCW.arg0: // axisの上へ
+        newSubPuyo =
+            subPuyo.copyWith(offset: Offset(axisPuyoDx, axisPuyoDy - 1));
+        break;
+      case AngleCW.arg90: // axisの右へ
+        newSubPuyo =
+            subPuyo.copyWith(offset: Offset(axisPuyoDx + 1, axisPuyoDy));
+        break;
+      case AngleCW.arg180: // axisの下へ
+        newSubPuyo =
+            subPuyo.copyWith(offset: Offset(axisPuyoDx, axisPuyoDy + 1));
+        break;
+      case AngleCW.arg270: // axisの左へ
+        newSubPuyo =
+            subPuyo.copyWith(offset: Offset(axisPuyoDx - 1, axisPuyoDy));
+        break;
+    }
+    return copyWith(angleCW: nextAngleCW, subPuyo: newSubPuyo);
+  }
+
   PairPuyoModel moveTo({double dx = 0, double dy = 0}) {
-    final fallAxisPuyo = axisPuyo.moveTo(dx: dx, dy: dy);
-    final fallSubPuyo = subPuyo.moveTo(dx: dx, dy: dy);
+    final fallAxisPuyo = axisPuyo.moveTo(dy: dy);
+    final fallSubPuyo = subPuyo.moveTo(dy: dy);
     return copyWith(axisPuyo: fallAxisPuyo, subPuyo: fallSubPuyo);
   }
 }

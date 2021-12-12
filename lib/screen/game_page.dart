@@ -63,12 +63,12 @@ class GamePage extends StatelessWidget {
             child: Row(
               children: [
                 ElevatedButton.icon(
-                  onPressed: model.moveLeft,
+                  onPressed: model.rotateLeft,
                   icon: Icon(Icons.arrow_left),
                   label: Container(),
                 ),
                 ElevatedButton.icon(
-                  onPressed: model.moveRight,
+                  onPressed: model.rotateRight,
                   icon: Icon(Icons.arrow_right),
                   label: Container(),
                 ),

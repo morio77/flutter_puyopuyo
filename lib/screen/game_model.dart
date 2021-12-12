@@ -174,4 +174,27 @@ class GameModel extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  // 左回転
+  void rotateLeft() {
+    _tyrRotate(isCW: false);
+    return;
+  }
+
+  // 右回転
+  void rotateRight() {
+    _tyrRotate(isCW: true);
+    return;
+  }
+
+  // ぷよを回転させてみてダメなら戻す関数
+  void _tyrRotate({required bool isCW}) {
+    final orginFallingPairPuyo = fallingPairPuyo!.copyWith();
+    fallingPairPuyo = fallingPairPuyo!.rotate(isCW);
+    if (_hasCollision()) {
+      fallingPairPuyo = orginFallingPairPuyo.copyWith();
+      return;
+    }
+    notifyListeners();
+  }
 }
