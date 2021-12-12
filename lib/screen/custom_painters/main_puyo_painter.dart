@@ -77,7 +77,19 @@ class MainPuyoPainter extends CustomPainter {
       );
     }
 
-    // 落ちて固まったぷよを描画する
+    // Fixぷよを描画する
+    for (final puyo in fixedPuyos) {
+      final subPuyoPaint = Paint()..color = puyo.getColor();
+      canvas.drawRect(
+        Rect.fromLTWH(
+          puyo.offset.dx * cellSize.width,
+          puyo.offset.dy * cellSize.height,
+          cellSize.width,
+          cellSize.height,
+        ),
+        subPuyoPaint,
+      );
+    }
 
     // ぷよのつながりを描画する
   }

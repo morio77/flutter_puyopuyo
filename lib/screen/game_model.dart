@@ -23,6 +23,7 @@ class GameModel extends ChangeNotifier {
   // ゲーム開始時に呼ぶ
   void startGame() {
     isPlaying = true;
+    fixedPuyos = [];
     _pickNextPuyo();
     mainLoop();
     notifyListeners();
@@ -64,22 +65,44 @@ class GameModel extends ChangeNotifier {
   bool _hasCollide() {
     // 落下させてみる
     final tmpFallingPuyo = fallingPairPuyo!.fall(PuyoConstants.fallSpeed);
+    final axisPuyoDx = tmpFallingPuyo.axisPuyo.offset.dx;
+    final axisPuyoDy = tmpFallingPuyo.axisPuyo.offset.dy;
+    final subPuyoDx = tmpFallingPuyo.subPuyo.offset.dx;
+    final subPuyoDy = tmpFallingPuyo.subPuyo.offset.dy;
 
     // 下端判定
-    final axisPuyoDy = tmpFallingPuyo.axisPuyo.offset.dy;
-    final subPuyoDy = tmpFallingPuyo.subPuyo.offset.dy;
     const lowerDy = PuyoConstants.heightCellCount - 1;
     if (axisPuyoDy > lowerDy || subPuyoDy > lowerDy) {
       return true;
     }
 
     // Fixぷよ判定
+    // axis, subそれぞれの境界dyを求める
+    double lowerAxisPuyoDy = PuyoConstants.heightCellCount - 1;
+    double lowerSubPuyoDy = PuyoConstants.heightCellCount - 1;
+    for (final fixPuyo in fixedPuyos) {
+      if (fixPuyo.offset.dx == axisPuyoDx) {
+        lowerAxisPuyoDy = fixPuyo.offset.dy - 1;
+      }
+      if (fixPuyo.offset.dx == subPuyoDx) {
+        lowerSubPuyoDy = fixPuyo.offset.dy - 1;
+      }
+    }
+    if (axisPuyoDy > lowerAxisPuyoDy || subPuyoDy > lowerSubPuyoDy) {
+      return true;
+    }
 
     return false;
   }
 
   // 落下中のぷよをFixさせる処理
-  void _fixFallingPuyo() {}
+  void _fixFallingPuyo() {
+    // ToDo: 片方のぷよを落下させる
+    // ToDo: 高さの誤差を補正
+    final axisPuyo = fallingPairPuyo!.axisPuyo;
+    final subPuyo = fallingPairPuyo!.subPuyo;
+    fixedPuyos.addAll([axisPuyo, subPuyo]);
+  }
 
   // ゲームオーバー判定
   bool _isGameOver() {
