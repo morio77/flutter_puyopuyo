@@ -31,8 +31,59 @@ class GameModel extends ChangeNotifier {
 
   // メインのループ
   Future<void> mainLoop() async {
-    await Future.delayed(const Duration(seconds: 2));
-    _endGame();
+    while (isPlaying) {
+      // ぷよを落下させる
+      _fallPuyo();
+
+      // 衝突判定
+      if (_hasCollide()) {
+        // Fix処理
+        _fixFallingPuyo();
+
+        // ゲームオーバー判定
+        if (_isGameOver()) {
+          _endGame();
+          return;
+        }
+
+        // 次のぷよを出現させる
+        _pickNextPuyo();
+      }
+
+      await Future.delayed(const Duration(milliseconds: 50));
+    }
+  }
+
+  // 落下中のぷよを落下させる
+  void _fallPuyo() {
+    fallingPairPuyo = fallingPairPuyo!.fall(PuyoConstants.fallSpeed);
+    notifyListeners();
+  }
+
+  // 衝突判定
+  bool _hasCollide() {
+    // 落下させてみる
+    final tmpFallingPuyo = fallingPairPuyo!.fall(PuyoConstants.fallSpeed);
+
+    // 下端判定
+    final axisPuyoDy = tmpFallingPuyo.axisPuyo.offset.dy;
+    final subPuyoDy = tmpFallingPuyo.subPuyo.offset.dy;
+    const lowerDy = PuyoConstants.heightCellCount - 1;
+    if (axisPuyoDy > lowerDy || subPuyoDy > lowerDy) {
+      return true;
+    }
+
+    // Fixぷよ判定
+
+    return false;
+  }
+
+  // 落下中のぷよをFixさせる処理
+  void _fixFallingPuyo() {}
+
+  // ゲームオーバー判定
+  bool _isGameOver() {
+    return true;
   }
 
   // ゲーム終了時に呼ぶ

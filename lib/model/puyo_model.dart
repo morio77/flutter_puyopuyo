@@ -18,6 +18,16 @@ class PairPuyoModel {
       angleCW ?? this.angleCW,
     );
   }
+
+  PairPuyoModel fall(double dy) {
+    return moveTo(dy: dy);
+  }
+
+  PairPuyoModel moveTo({double dx = 0, double dy = 0}) {
+    final fallAxisPuyo = axisPuyo.moveTo(dx: dx, dy: dy);
+    final fallSubPuyo = subPuyo.moveTo(dx: dx, dy: dy);
+    return copyWith(axisPuyo: fallAxisPuyo, subPuyo: fallSubPuyo);
+  }
 }
 
 @immutable
@@ -34,6 +44,13 @@ class PuyoModel {
       color ?? this.color,
       offset ?? this.offset,
     );
+  }
+
+  PuyoModel moveTo({double dx = 0, double dy = 0}) {
+    final newDx = offset.dx + dx;
+    final newDy = offset.dy + dy;
+    final newOffset = Offset(newDx, newDy);
+    return copyWith(offset: newOffset);
   }
 
   Color getColor() {
