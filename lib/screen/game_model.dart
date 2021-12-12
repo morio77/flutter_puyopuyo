@@ -37,7 +37,7 @@ class GameModel extends ChangeNotifier {
       _fallPuyo();
 
       // 衝突判定
-      if (_hasCollide()) {
+      if (_hasCollision()) {
         // Fix処理
         _fixFallingPuyo();
 
@@ -62,13 +62,11 @@ class GameModel extends ChangeNotifier {
   }
 
   // 衝突判定
-  bool _hasCollide() {
-    // 落下させてみる
-    final tmpFallingPuyo = fallingPairPuyo!.fall(PuyoConstants.fallSpeed);
-    final axisPuyoDx = tmpFallingPuyo.axisPuyo.offset.dx;
-    final axisPuyoDy = tmpFallingPuyo.axisPuyo.offset.dy;
-    final subPuyoDx = tmpFallingPuyo.subPuyo.offset.dx;
-    final subPuyoDy = tmpFallingPuyo.subPuyo.offset.dy;
+  bool _hasCollision() {
+    final axisPuyoDx = fallingPairPuyo!.axisPuyo.offset.dx;
+    final axisPuyoDy = fallingPairPuyo!.axisPuyo.offset.dy;
+    final subPuyoDx = fallingPairPuyo!.subPuyo.offset.dx;
+    final subPuyoDy = fallingPairPuyo!.subPuyo.offset.dy;
 
     // 下端判定
     const lowerDy = PuyoConstants.heightCellCount - 1;
@@ -92,6 +90,13 @@ class GameModel extends ChangeNotifier {
       return true;
     }
 
+    // 左右判定
+    if (axisPuyoDx < 0 ||
+        axisPuyoDx > PuyoConstants.widthCellCount - 1 ||
+        subPuyoDx < 0 ||
+        subPuyoDx > PuyoConstants.widthCellCount - 1) {
+      return true;
+    }
     return false;
   }
 
@@ -142,7 +147,7 @@ class GameModel extends ChangeNotifier {
   void _tryMoveTo({double dx = 0, double dy = 0}) {
     final orginFallingPairPuyo = fallingPairPuyo!.copyWith();
     fallingPairPuyo = fallingPairPuyo!.moveTo(dx: dx, dy: dy);
-    if (_hasCollide()) {
+    if (_hasCollision()) {
       fallingPairPuyo = orginFallingPairPuyo.copyWith();
       return;
     }
