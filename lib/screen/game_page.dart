@@ -56,6 +56,25 @@ class GamePage extends StatelessWidget {
               ],
             ),
           ),
+          // デバッグ用、左右ボタン
+          floatingActionButton: SizedBox(
+            width: 200,
+            height: 50,
+            child: Row(
+              children: [
+                ElevatedButton.icon(
+                  onPressed: model.moveLeft,
+                  icon: Icon(Icons.arrow_left),
+                  label: Container(),
+                ),
+                ElevatedButton.icon(
+                  onPressed: model.moveRight,
+                  icon: Icon(Icons.arrow_right),
+                  label: Container(),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

@@ -51,7 +51,7 @@ class GameModel extends ChangeNotifier {
         _pickNextPuyo();
       }
 
-      await Future.delayed(const Duration(milliseconds: 50));
+      await Future.delayed(const Duration(milliseconds: 20));
     }
   }
 
@@ -77,7 +77,7 @@ class GameModel extends ChangeNotifier {
     }
 
     // Fixぷよ判定
-    // axis, subそれぞれの境界dyを求める
+    // axis, subそれぞれの境界dyを求めてから判定
     double lowerAxisPuyoDy = PuyoConstants.heightCellCount - 1;
     double lowerSubPuyoDy = PuyoConstants.heightCellCount - 1;
     for (final fixPuyo in fixedPuyos) {
@@ -119,6 +119,33 @@ class GameModel extends ChangeNotifier {
   void _pickNextPuyo() {
     fallingPairPuyo = nextPairPuyos.removeAt(0);
     nextPairPuyos.add(PuyoUtils.generatePairPuyoModel());
+    notifyListeners();
+  }
+
+  /// ***
+  /// ユーザ操作
+  /// ***
+
+  // 左移動
+  void moveLeft() {
+    _tryMoveTo(dx: -1);
+    return;
+  }
+
+  // 右移動
+  void moveRight() {
+    _tryMoveTo(dx: 1);
+    return;
+  }
+
+  // ぷよを動かしてみてダメなら戻す関数
+  void _tryMoveTo({double dx = 0, double dy = 0}) {
+    final orginFallingPairPuyo = fallingPairPuyo!.copyWith();
+    fallingPairPuyo = fallingPairPuyo!.moveTo(dx: dx, dy: dy);
+    if (_hasCollide()) {
+      fallingPairPuyo = orginFallingPairPuyo.copyWith();
+      return;
+    }
     notifyListeners();
   }
 }
