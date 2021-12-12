@@ -23,7 +23,7 @@ class PuyoUtils {
     }
 
     // 軸になるぷよかどうかで、Offsetを調整する
-    final offset = Offset(4, isAxisPuyo ? 1 : 0);
+    final offset = Offset(2, isAxisPuyo ? 1 : 0);
 
     // インスタンス生成してリターン
     return PuyoModel(puyoColor, offset);

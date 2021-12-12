@@ -103,15 +103,35 @@ class GameModel extends ChangeNotifier {
   // 落下中のぷよをFixさせる処理
   void _fixFallingPuyo() {
     // ToDo: 片方のぷよを落下させる
-    // ToDo: 高さの誤差を補正
-    final axisPuyo = fallingPairPuyo!.axisPuyo;
-    final subPuyo = fallingPairPuyo!.subPuyo;
+    // Offsetの誤差を補正
+    final axisPuyoOffset = fallingPairPuyo!.axisPuyo.offset;
+    final correctAxisPuyoOffset = Offset(
+      axisPuyoOffset.dx.toInt().toDouble(),
+      axisPuyoOffset.dy.toInt().toDouble(),
+    );
+    final subPuyoOffset = fallingPairPuyo!.subPuyo.offset;
+    final correctSubPuyoOffset = Offset(
+      subPuyoOffset.dx.toInt().toDouble(),
+      subPuyoOffset.dy.toInt().toDouble(),
+    );
+
+    final axisPuyo =
+        fallingPairPuyo!.axisPuyo.copyWith(offset: correctAxisPuyoOffset);
+    final subPuyo =
+        fallingPairPuyo!.subPuyo.copyWith(offset: correctSubPuyoOffset);
     fixedPuyos.addAll([axisPuyo, subPuyo]);
   }
 
   // ゲームオーバー判定
   bool _isGameOver() {
-    return true;
+    const batsuOffset1 = Offset(2, 0);
+    const batsuOffset2 = Offset(3, 0);
+    for (final fixPuyo in fixedPuyos) {
+      if (fixPuyo.offset == batsuOffset1 || fixPuyo.offset == batsuOffset2) {
+        return true;
+      }
+    }
+    return false;
   }
 
   // ゲーム終了時に呼ぶ
