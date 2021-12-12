@@ -24,7 +24,8 @@ class GamePage extends StatelessWidget {
               children: [
                 // メインのフィールド
                 CustomPaint(
-                  painter: MainPuyoPainter(),
+                  painter:
+                      MainPuyoPainter(model.fixedPuyos, model.fallingPairPuyo),
                   child: const SizedBox(
                     width: 300,
                     height: 550,
@@ -37,7 +38,7 @@ class GamePage extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: CustomPaint(
-                      painter: NextPuyoPainter(),
+                      painter: NextPuyoPainter(model.nextPairPuyos),
                       child: const SizedBox(
                         width: 300,
                         height: 100,

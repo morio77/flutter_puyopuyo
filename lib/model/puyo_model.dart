@@ -35,6 +35,21 @@ class PuyoModel {
       offset ?? this.offset,
     );
   }
+
+  Color getColor() {
+    switch (color) {
+      case PuyoColor.green:
+        return Colors.green;
+      case PuyoColor.red:
+        return Colors.red;
+      case PuyoColor.blue:
+        return Colors.blue;
+      case PuyoColor.yellow:
+        return Colors.yellow;
+      case PuyoColor.purple:
+        return Colors.purple;
+    }
+  }
 }
 
 enum PuyoColor {

@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_puyopuyo/utils/puyo_constants.dart';
 
 import '../model/puyo_model.dart';
 import '../utils/puyo_utils.dart';
 
 class GameModel extends ChangeNotifier {
-  // 定数など
-  static const int fieldWidth = 6;
-  static const int fieldHeight = 13;
-  static const int nextPuyoCount = 2;
-
   // ゲームの状態値
   bool isPlaying = false;
 
@@ -19,7 +15,7 @@ class GameModel extends ChangeNotifier {
 
   GameModel() {
     // NEXTのペアぷよを生成する
-    for (var i = 0; i < nextPuyoCount + 1; i++) {
+    for (var i = 0; i < PuyoConstants.nextPuyoCount; i++) {
       nextPairPuyos.add(PuyoUtils.generatePairPuyoModel());
     }
   }
@@ -27,6 +23,7 @@ class GameModel extends ChangeNotifier {
   // ゲーム開始時に呼ぶ
   void startGame() {
     isPlaying = true;
+    _pickNextPuyo();
     mainLoop();
     notifyListeners();
     return;
@@ -41,6 +38,13 @@ class GameModel extends ChangeNotifier {
   // ゲーム終了時に呼ぶ
   void _endGame() {
     isPlaying = false;
+    notifyListeners();
+  }
+
+  // NEXTぷよを押し出して、一つ生成する
+  void _pickNextPuyo() {
+    fallingPairPuyo = nextPairPuyos.removeAt(0);
+    nextPairPuyos.add(PuyoUtils.generatePairPuyoModel());
     notifyListeners();
   }
 }

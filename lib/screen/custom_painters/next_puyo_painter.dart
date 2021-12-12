@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_puyopuyo/model/puyo_model.dart';
 
 class NextPuyoPainter extends CustomPainter {
+  final List<PairPuyoModel> nextPairPuyos;
+  NextPuyoPainter(this.nextPairPuyos);
+
   @override
   void paint(Canvas canvas, Size size) {
     // 枠線を描画する
