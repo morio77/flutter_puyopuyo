@@ -106,13 +106,13 @@ class GameModel extends ChangeNotifier {
     // Offsetの誤差を補正
     final axisPuyoOffset = fallingPairPuyo!.axisPuyo.offset;
     final correctAxisPuyoOffset = Offset(
-      axisPuyoOffset.dx.toInt().toDouble(),
-      axisPuyoOffset.dy.toInt().toDouble(),
+      axisPuyoOffset.dx.round().toDouble(),
+      axisPuyoOffset.dy.round().toDouble(),
     );
     final subPuyoOffset = fallingPairPuyo!.subPuyo.offset;
     final correctSubPuyoOffset = Offset(
-      subPuyoOffset.dx.toInt().toDouble(),
-      subPuyoOffset.dy.toInt().toDouble(),
+      subPuyoOffset.dx.round().toDouble(),
+      subPuyoOffset.dy.round().toDouble(),
     );
 
     final axisPuyo =
@@ -137,6 +137,7 @@ class GameModel extends ChangeNotifier {
   // ゲーム終了時に呼ぶ
   void _endGame() {
     isPlaying = false;
+    fallingPairPuyo = null;
     notifyListeners();
   }
 
