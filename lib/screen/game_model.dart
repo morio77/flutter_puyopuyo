@@ -80,10 +80,14 @@ class GameModel extends ChangeNotifier {
     double lowerSubPuyoDy = PuyoConstants.heightCellCount - 1;
     for (final fixPuyo in fixedPuyos) {
       if (fixPuyo.offset.dx == axisPuyoDx) {
-        lowerAxisPuyoDy = fixPuyo.offset.dy - 1;
+        if (lowerAxisPuyoDy > fixPuyo.offset.dy - 1) {
+          lowerAxisPuyoDy = fixPuyo.offset.dy - 1;
+        }
       }
       if (fixPuyo.offset.dx == subPuyoDx) {
-        lowerSubPuyoDy = fixPuyo.offset.dy - 1;
+        if (lowerSubPuyoDy > fixPuyo.offset.dy - 1) {
+          lowerSubPuyoDy = fixPuyo.offset.dy - 1;
+        }
       }
     }
     if (axisPuyoDy > lowerAxisPuyoDy || subPuyoDy > lowerSubPuyoDy) {
