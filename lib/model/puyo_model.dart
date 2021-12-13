@@ -50,8 +50,8 @@ class PairPuyoModel {
   }
 
   PairPuyoModel moveTo({double dx = 0, double dy = 0}) {
-    final fallAxisPuyo = axisPuyo.moveTo(dy: dy);
-    final fallSubPuyo = subPuyo.moveTo(dy: dy);
+    final fallAxisPuyo = axisPuyo.moveTo(dx: dx, dy: dy);
+    final fallSubPuyo = subPuyo.moveTo(dx: dx, dy: dy);
     return copyWith(axisPuyo: fallAxisPuyo, subPuyo: fallSubPuyo);
   }
 }

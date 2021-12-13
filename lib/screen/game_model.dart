@@ -13,6 +13,10 @@ class GameModel extends ChangeNotifier {
   PairPuyoModel? fallingPairPuyo; // 落下中のペアぷよ
   List<PairPuyoModel> nextPairPuyos = []; // NEXTのペアぷよ（リスト）
 
+  // ユーザ操作に関する状態値
+  double moveThresholdDx = 75;
+  double cumulativeDx = 0;
+
   GameModel() {
     // NEXTのペアぷよを生成する
     for (var i = 0; i < PuyoConstants.nextPuyoCount; i++) {
@@ -40,6 +44,9 @@ class GameModel extends ChangeNotifier {
       if (_hasCollision()) {
         // Fix処理
         _fixFallingPuyo();
+
+        // ドラッグ変数を初期化
+        resetDrag();
 
         // ゲームオーバー判定
         if (_isGameOver()) {
@@ -156,29 +163,6 @@ class GameModel extends ChangeNotifier {
   /// ユーザ操作
   /// ***
 
-  // 左移動
-  void moveLeft() {
-    _tryMoveTo(dx: -1);
-    return;
-  }
-
-  // 右移動
-  void moveRight() {
-    _tryMoveTo(dx: 1);
-    return;
-  }
-
-  // ぷよを動かしてみてダメなら戻す関数
-  void _tryMoveTo({double dx = 0, double dy = 0}) {
-    final orginFallingPairPuyo = fallingPairPuyo!.copyWith();
-    fallingPairPuyo = fallingPairPuyo!.moveTo(dx: dx, dy: dy);
-    if (_hasCollision()) {
-      fallingPairPuyo = orginFallingPairPuyo.copyWith();
-      return;
-    }
-    notifyListeners();
-  }
-
   // 左回転
   void rotateLeft() {
     _tyrRotate(isCW: false);
@@ -201,4 +185,50 @@ class GameModel extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  // ドラッグしたら呼ばれる
+  void drag(DragUpdateDetails details) {
+    // 方向転換したら蓄積したドラッグはリセットする
+    if (cumulativeDx == 0 && details.delta.dx.sign != cumulativeDx.sign) {
+      cumulativeDx = 0;
+    }
+
+    // ドラッグ距離を蓄積する
+    cumulativeDx += details.delta.dx;
+
+    // 蓄積したドラッグ距離が閾値を超えたら移動
+    if (cumulativeDx > moveThresholdDx) {
+      _moveRight();
+      cumulativeDx = 0;
+    } else if (cumulativeDx < -moveThresholdDx) {
+      _moveLeft();
+      cumulativeDx = 0;
+    }
+  }
+
+  // 左移動
+  void _moveLeft() {
+    _tryMoveTo(dx: -1);
+    return;
+  }
+
+  // 右移動
+  void _moveRight() {
+    _tryMoveTo(dx: 1);
+    return;
+  }
+
+  // ぷよを動かしてみてダメなら戻す関数
+  void _tryMoveTo({double dx = 0, double dy = 0}) {
+    final orginFallingPairPuyo = fallingPairPuyo!.copyWith();
+    fallingPairPuyo = fallingPairPuyo!.moveTo(dx: dx, dy: dy);
+    if (_hasCollision()) {
+      fallingPairPuyo = orginFallingPairPuyo.copyWith();
+      return;
+    }
+    notifyListeners();
+  }
+
+  // 指を離したとき
+  void resetDrag() => cumulativeDx = 0;
 }

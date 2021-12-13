@@ -11,6 +11,9 @@ class GamePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final screenWidth = screenSize.width;
+
     return ChangeNotifierProvider(
       create: (BuildContext context) => GameModel(),
       child: Consumer<GameModel>(
@@ -18,43 +21,64 @@ class GamePage extends StatelessWidget {
           appBar: AppBar(
             title: const Text('flutterでぷよぷよ'),
           ),
-          body: Center(
-            child: Stack(
-              alignment: AlignmentDirectional.center,
-              children: [
-                // メインのフィールド
-                CustomPaint(
-                  painter:
-                      MainPuyoPainter(model.fixedPuyos, model.fallingPairPuyo),
-                  child: const SizedBox(
-                    width: 300,
-                    height: 550,
-                  ),
-                ),
-
-                // ネクストのフィールド
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CustomPaint(
-                      painter: NextPuyoPainter(model.nextPairPuyos),
+          body: Stack(
+            children: [
+              Center(
+                child: Stack(
+                  alignment: AlignmentDirectional.center,
+                  children: [
+                    // メインのフィールド
+                    CustomPaint(
+                      painter: MainPuyoPainter(
+                          model.fixedPuyos, model.fallingPairPuyo),
                       child: const SizedBox(
                         width: 300,
-                        height: 100,
+                        height: 550,
                       ),
                     ),
-                  ),
-                ),
 
-                // スタートボタン
-                if (!model.isPlaying)
-                  ElevatedButton(
-                    onPressed: model.startGame,
-                    child: const Text('スタート'),
-                  ),
-              ],
-            ),
+                    // ネクストのフィールド
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CustomPaint(
+                          painter: NextPuyoPainter(model.nextPairPuyos),
+                          child: const SizedBox(
+                            width: 300,
+                            height: 100,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              model.isPlaying
+                  // 操作を検知する
+                  ? GestureDetector(
+                      // 回転
+                      onTapUp: (detail) {
+                        if (detail.globalPosition.dx > screenWidth * 0.5) {
+                          model.rotateRight();
+                        } else {
+                          model.rotateLeft();
+                        }
+                      },
+                      // 移動
+                      onPanUpdate: model.drag,
+
+                      // 指を離すとドラッグ変数リセット
+                      onPanEnd: (_) => model.resetDrag,
+                    )
+                  // スタートボタン
+                  : Center(
+                      child: ElevatedButton(
+                        onPressed: model.startGame,
+                        child: const Text('スタート'),
+                      ),
+                    ),
+            ],
           ),
           // デバッグ用、左右ボタン
           floatingActionButton: SizedBox(
